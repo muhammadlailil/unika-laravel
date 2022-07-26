@@ -1,0 +1,1 @@
+<h1>Detail BERITA  : {{ $slug }} </h1>
