@@ -39,6 +39,7 @@ class LoginController extends Controller
     }
 
     function loginDB(Request $request){
+        
         // login by query and session
         $email = $request->email;
         $password = $request->password;

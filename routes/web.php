@@ -21,9 +21,6 @@ use App\Http\Controllers\FrontEnd\DashboardController;
 */
 
 Route::get('/', function () {
-    // $dateFormat = DateHelper::dateFormat('d-m-Y');
-    // $haloDunia = haloDunia();
-    // dd($haloDunia);
     App::setLocale(session('bahasa'));
     return view('welcome');
 });
