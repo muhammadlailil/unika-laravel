@@ -8,7 +8,11 @@ use App\Http\Middleware\FrontEndMiddleware;
 use App\Http\Controllers\FrontEnd\MenuController;
 use App\Http\Controllers\FrontEnd\LoginController;
 use App\Http\Controllers\FrontEnd\AboutUsController;
+use App\Http\Controllers\Backend\AdminBooksController;
+use App\Http\Controllers\Backend\AdminLoginController;
 use App\Http\Controllers\FrontEnd\DashboardController;
+use App\Http\Controllers\Backend\AdminAuthorController;
+use App\Http\Controllers\Backend\AdminDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -121,4 +125,41 @@ Route::get('set-session',function(Request $request){
 Route::get('get-session',function(Request $request){
     $sessionName = $request->name;
     return session($sessionName); // session()->get('nama_session');
+});
+
+Route::group([
+    'prefix'=> 'admin',
+    'as' => 'admin.'
+],function(){
+
+    Route::get('login',[AdminLoginController::class,'index'])->name('login');
+    Route::post('login',[AdminLoginController::class,'postLogin'])->name('post-login'); //admin.post-login
+
+    Route::middleware(['backend'])->group(function(){
+        Route::get('dashboard',[AdminDashboardController::class,'index'])->name('dashboard');
+        // Route::get('url yang kita mau',[class controller kita, 'method di controller kita'])->name('nama route kita');  
+        
+        Route::controller(AdminAuthorController::class)->group(function(){
+            Route::get('author','index')->name('author');
+            Route::get('author/create','getCreate')->name('author-create');
+            Route::post('author/save','postSave')->name('author-save');
+            Route::get('author/edit/{id}','getEdit')->name('author-edit');
+            Route::post('author/update','postUpdate')->name('author-update');
+            Route::get('author/delete/{id}','getDelete')->name('author-delete');
+        });
+
+        Route::controller(AdminBooksController::class)->group(function(){
+            Route::get('books','index')->name('books');
+            Route::get('books/create','getCreate')->name('books-create');
+            Route::post('books/save','postSave')->name('books-save');
+            Route::get('books/edit/{id}','getEdit')->name('books-edit');
+            Route::post('books/update','postUpdate')->name('books-update');
+            Route::get('books/delete/{id}','getDelete')->name('books-delete');
+        });
+    });
+
+});
+
+Route::get('simlink',function(){
+    return app('files')->link(storage_path('app/uploads'), public_path('uploads'));
 });
